@@ -9,13 +9,17 @@ musicVolume = 30;
 sfxVolume = 100;
 
 asteroidSpawnRate = 30; %after how many frames does next asteroid spawn
-finalAsteroidSpawnRate = 17; %biggest cadency of asteroids
+finalAsteroidSpawnRate = 5; %biggest cadency of asteroids
 intervalDecrease = 0.5; %how fast the game gets harder
 
 laserCooldownTime = fps/5; %speed of shooting
 laserCooldown = laserCooldownTime;
 movementCooldownTime = ceil(fps/15); %speed of the ship
 movementCooldown = movementCooldownTime;
+
+%explosion sfx
+[explosionSound, explosionRate] = audioread('MeteorShower/explosion.wav');
+explosionSfx = audioplayer((explosionSound*7)/(sfxVolume/100), explosionRate);
 
 %laser sfx
 [laserSound, laserRate] = audioread('MeteorShower/sfx_sounds_damage2.wav');
@@ -164,7 +168,7 @@ while gameOver ~= 1
       i = i + 1;
     end
   end
-    %moves asteroids and clears the ones that reached the bottom
+    %moves asteroids and checks if you lost
     i = 2;
     if exist('asteroidObj')
       while i <= numel(asteroidObj)
@@ -184,19 +188,18 @@ while gameOver ~= 1
       end
     end
     %checking collision
-    i = 2;
-    j = 2;
+    i = 1;
+    j = 1;
     while j <= numel(asteroidObj)
       while i <= numel(laserObj)
-        if ((abs(asteroidObj(j).posy - laserObj(i).posy)) < 5) & (laserObj(i).posx == asteroidObj(j).posx)
+        if ((abs(asteroidObj(j).posy - laserObj(i).posy)) < 7) & (laserObj(i).posx == asteroidObj(j).posx)
           %increase score and delete hit objects
+          play(explosionSfx);
           score = score + 10;
           delete(scoreText);
           scoreText = text(Xlimit*0.1, Ylimit*0.9, sprintf('SCORE: %d', score), 'FontWeight', 'bold', 'FontName', 'Monospaced', 'Color', [1 1 1]);
           delete(laserObj(i).body);
-          clear laserObj(i)
           delete(asteroidObj(j).body);
-          clear asteroidObj(i)
           if i ~= numel(laserObj)
             for k = i+1:numel(laserObj)
               laserObj(k-1) = laserObj(k);
@@ -209,13 +212,12 @@ while gameOver ~= 1
             end
           end
           asteroidObj = asteroidObj(1:end-1);
-         % i = i-1;
-         % j = j-1;
           i = 1;
           j = 1;
         end
         i = i+1;
       end
+      i = 1;
       j = j+1;
     end
     % fps correction
@@ -262,6 +264,7 @@ end
     stop(soundtrack);
     stop(laserSfx);
     stop(deathSfx);
+    stop(explosionSfx);
     delete(src);
     return;
   end
