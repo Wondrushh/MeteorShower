@@ -18,19 +18,19 @@ movementCooldownTime = ceil(fps/15); %speed of the ship
 movementCooldown = movementCooldownTime;
 
 %explosion sfx
-[explosionSound, explosionRate] = audioread('MeteorShower/explosion.wav');
+[explosionSound, explosionRate] = audioread('explosion.wav');
 explosionSfx = audioplayer((explosionSound*7)/(sfxVolume/100), explosionRate);
 
 %laser sfx
-[laserSound, laserRate] = audioread('MeteorShower/sfx_sounds_damage2.wav');
+[laserSound, laserRate] = audioread('sfx_sounds_damage2.wav');
 laserSfx = audioplayer(laserSound*(sfxVolume/100), laserRate);
 
 %death sound sfx
-[deathSound, deathRate] = audioread('MeteorShower/death_sound.wav');
+[deathSound, deathRate] = audioread('death_sound.wav');
 deathSfx = audioplayer(deathSound*(sfxVolume/100), deathRate);
 
 %soundtrack
-[BockeyMouseAudio, BockeyMouseRate] = audioread('MeteorShower/soundtrack.wav');
+[BockeyMouseAudio, BockeyMouseRate] = audioread('soundtrack.wav');
 soundtrack = audioplayer(BockeyMouseAudio*(musicVolume/100), BockeyMouseRate);
 play(soundtrack);
 
