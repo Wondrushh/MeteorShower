@@ -1,5 +1,5 @@
 # MeteorShower
-This is a game for MATLAB. You shoot asteroids with lasers and score.
+This is a game for MATLAB. You shoot asteroids with lasers and score. If you have any problems, open a new issue and I will have a look.
 <h2>How to run</h2>
 <ul>
   <li>Install MATLAB</li>
