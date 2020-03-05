@@ -4,13 +4,13 @@ function MeteorShower()
 %Parameters to change
 Ylimit = 100; %optimal = 100 
 Xlimit = 10; %optimal = 10
-fps = 15; %optimal = 15
+fps = 25; %optimal = 15
 musicVolume = 30;
 sfxVolume = 100;
 
-asteroidSpawnRate = 30; %after how many frames does next asteroid spawn
-finalAsteroidSpawnRate = 5; %biggest cadency of asteroids
-intervalDecrease = 0.5; %how fast the game gets harder
+asteroidSpawnRate = 30*2; %after how many frames does next asteroid spawn
+finalAsteroidSpawnRate = 5*2; %biggest cadency of asteroids
+intervalDecrease = 0.5*2; %how fast the game gets harder
 
 laserCooldownTime = fps/5; %speed of shooting
 laserCooldown = laserCooldownTime;
@@ -34,12 +34,13 @@ deathSfx = audioplayer(deathSound*(sfxVolume/100), deathRate);
 soundtrack = audioplayer(BockeyMouseAudio*(musicVolume/100), BockeyMouseRate);
 play(soundtrack);
 
-CAR.posx = Xlimit/2;
-CAR.posy = Ylimit/10;
-step = Xlimit/10;
-
+%initialize the objects, score and game over flag
 laserObj(1) = laser;
 asteroidObj(1) = asteroid;
+ship = starship;
+ship.posx = Xlimit/2;
+ship.posy = Ylimit/10;
+ship.step = Xlimit/10;
 score = 0;
 gameOver = 0;
 frames = 0;
@@ -55,10 +56,6 @@ KEY.right = 4;
 KEY.space = 5;
 KEY.escape = 6;
 
-%how does the ship look like
-fontShape = 'FixedWidth';
-shipShape = {'/\_\\' '/=\\\_/( )\\\_/=\\'};
-
 %settings for the figure window
 game = figure('KeyPressFcn',{@KeySniffFcn},...
               'KeyReleaseFcn',{@KeyRelFcn},...
@@ -68,12 +65,13 @@ game = figure('KeyPressFcn',{@KeySniffFcn},...
               'menubar', 'none',...
               'NumberTitle', 'off');
 axis([0,Xlimit,0,Ylimit])
+
 %Makes the axes disappear
 set(gca,'xtick',[],'ytick',[],'xcolor', [1 1 1],'ycolor', [1 1 1], 'Color', 'k');
 set(gcf, 'WindowState', 'maximized');
 
 hold on
-car = text(CAR.posx,CAR.posy,shipShape,'FontName', fontShape,'HorizontalAlignment', 'center', 'Color', [1 1 1],'FontWeight', 'bold');
+spawn(ship);
 introText = text(Xlimit/2, Ylimit/2, 'WELCOME! PRESS SPACE TO START PLAYING...', 'HorizontalAlignment', 'center', 'Color', [1 1 1],'FontWeight', 'bold', 'FontName', 'Monospaced');
 scoreText = text();
 drawnow()
@@ -104,16 +102,12 @@ while gameOver ~= 1
     movementCooldown = movementCooldown + 1;
   else
     %defining the actions of keystrokes
-    if keyStatus(KEY.left) && (CAR.posx - step)>0
-      CAR.posx = CAR.posx - step;
-      delete(car)
-      car = text(CAR.posx,CAR.posy,shipShape,'FontName', fontShape, 'HorizontalAlignment', 'center', 'Color', [1 1 1],'FontWeight', 'bold');
+    if keyStatus(KEY.left) && (ship.posx - ship.step)>0
+      moveLeft(ship);
       movementCooldown = 1;
     end
-    if keyStatus(KEY.right) && (CAR.posx + step)<Xlimit
-      CAR.posx = CAR.posx + step;
-      delete(car);
-      car = text(CAR.posx,CAR.posy,shipShape,'FontName', fontShape, 'HorizontalAlignment', 'center', 'Color', [1 1 1],'FontWeight', 'bold');
+    if keyStatus(KEY.right) && (ship.posx + ship.step)<Xlimit
+      moveRight(ship);
       movementCooldown = 1;
     end
     %quit the game when pressing escape
@@ -129,8 +123,8 @@ while gameOver ~= 1
     if keyStatus(KEY.space)
       play(laserSfx);
       laserObj(end+1) = laser;
-      laserObj(end).posx = CAR.posx;
-      laserObj(end).posy = CAR.posy;
+      laserObj(end).posx = ship.posx;
+      laserObj(end).posy = ship.posy;
       spawn(laserObj(end));
       laserCooldown = 1;
     end
@@ -172,7 +166,7 @@ while gameOver ~= 1
     i = 2;
     if exist('asteroidObj')
       while i <= numel(asteroidObj)
-        if asteroidObj(i).posy < CAR.posy + 2 % the 2 is correction
+        if asteroidObj(i).posy < ship.posy + 2 % the 2 is correction
           play(deathSfx);
           delete(asteroidObj(i).body);
           clear asteroidObj(i);
@@ -187,6 +181,7 @@ while gameOver ~= 1
         i = i + 1;
       end
     end
+    
     %checking collision
     i = 1;
     j = 1;
@@ -197,7 +192,11 @@ while gameOver ~= 1
           play(explosionSfx);
           score = score + 10;
           delete(scoreText);
-          scoreText = text(Xlimit*0.1, Ylimit*0.9, sprintf('SCORE: %d', score), 'FontWeight', 'bold', 'FontName', 'Monospaced', 'Color', [1 1 1]);
+          scoreText = text(Xlimit*0.1, Ylimit*0.9,...
+            sprintf('SCORE: %d', score),...
+            'FontWeight', 'bold',...
+            'FontName', 'Monospaced',...
+            'Color', [1 1 1]);
           delete(laserObj(i).body);
           delete(asteroidObj(j).body);
           if i ~= numel(laserObj)
@@ -220,7 +219,7 @@ while gameOver ~= 1
       i = 1;
       j = j+1;
     end
-    % fps correction
+    %fps correction
     elapsedFrameTime = toc;
     if elapsedFrameTime<(1/fps)
       pause((1/fps)-elapsedFrameTime)
