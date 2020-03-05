@@ -1,6 +1,6 @@
 classdef laser < handle
   properties
-    velocity = 5 %5 at 15 FPS
+    velocity = (5*15)/25; %5 at 15 FPS
     posx
     posy
     shape = '|'

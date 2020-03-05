@@ -3,7 +3,7 @@ classdef asteroid < handle
   %   Detailed explanation goes here
   
   properties
-    velocity = -2;
+    velocity = (-2*15)/25; %ideal -2 at 15 fps
     posx
     posy
     shape = {'.::.',':::::::',':::::::',''':::'''};
