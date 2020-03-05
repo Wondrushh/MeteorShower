@@ -1,0 +1,39 @@
+classdef starship < handle
+  properties
+    shipShape = {'/\_\\' '/=\\\_/( )\\\_/=\\'};
+    posx
+    posy 
+    step
+    body
+    color = [1 1 1]
+  end
+  
+  methods
+    function spawn(obj)
+      obj.body = text(obj.posx,obj.posy, obj.shipShape,...
+        'FontName', 'FixedWidth',...
+        'HorizontalAlignment', 'center',...
+        'Color', obj.color,...
+        'FontWeight', 'bold');
+    end
+    function moveLeft(obj)
+      obj.posx = obj.posx - obj.step;
+      delete(obj.body);
+      obj.body = text(obj.posx,obj.posy, obj.shipShape,...
+        'FontName', 'FixedWidth',...
+        'HorizontalAlignment', 'center',...
+        'Color', obj.color,...
+        'FontWeight', 'bold');
+    end
+    function moveRight(obj)
+      obj.posx = obj.posx + obj.step;
+      delete(obj.body);
+      obj.body = text(obj.posx,obj.posy, obj.shipShape,...
+        'FontName', 'FixedWidth',...
+        'HorizontalAlignment', 'center',...
+        'Color', obj.color,...
+        'FontWeight', 'bold');
+    end
+  end
+end
+
