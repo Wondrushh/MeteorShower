@@ -5,7 +5,7 @@ This is a game for MATLAB. You shoot asteroids with lasers and score. If you hav
   <li>Install MATLAB</li>
   <li>Clone/download this game</li>
   <li>Add the folder with the game to MATLAB path</li>
-  <li>Run the function MeteorShower</li>
+  <li>Create a new object of the MeteorShowerClass (e.g. m = MeteorShowerClass())</li>
   <li>Enjoy the game</li>
 </ul>
 <h3>Controls</h3>
