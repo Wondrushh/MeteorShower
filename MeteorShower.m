@@ -260,10 +260,6 @@ end
   function QuitFcn(src,event)
     %QUITFCN Summary of this function goes here
     %   Detailed explanation goes here
-    stop(soundtrack);
-    stop(laserSfx);
-    stop(deathSfx);
-    stop(explosionSfx);
     delete(src);
     return;
   end
