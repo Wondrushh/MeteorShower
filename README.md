@@ -9,7 +9,7 @@ This is a game for MATLAB. You shoot asteroids with lasers and score. If you hav
   <li>Enjoy the game</li>
 </ul>
 <h3>Controls</h3>
-<p>You move with W and A, and shoot with Space</p>
+<p>You move with A and D, and shoot with Space</p>
 <h3>Testing version of MATLAB: 2019b</h3>
 <h4>Music</h4>
 <a href='https://www.nicovideo.jp/watch/sm17088539'>Bockey Mouse March</a> by <a href='https://www.nicovideo.jp/user/12924187'>腐死鳥</a> <br>
